@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>leaflet basic</title>
+</head>
+
+<!-- leaflet css  -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+
+<!-- marker cluseter  -->
+<link rel="stylesheet" href="./Leaflet.markercluster-1.4.1/dist/MarkerCluster.css">
+<link rel="stylesheet" href="./Leaflet.markercluster-1.4.1/dist/MarkerCluster.Default.css">
+
+
+<!-- leaflet measure  -->
+<link rel="stylesheet" href="./leaflet-measure.css">
+
+<style>
+    #mapid {
+        width: 100%;
+        height: 400px;
+    }
+</style>
+
+<body>
+    <h2>This is leaflet basic</h2>
+
+    <button class="print-map">Print map</button>
+    <div id='mapid'>
+        <button onclick='openFullMap()' class="leaflet-control">Full map screen</button>
+    </div>
+    <div class="coordinate"></div>
+</body>
+
+</html>
+
+<!--Jquery link-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- leaflet js  -->
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+
+<!-- geojson data -->
+<script src="./data.js"></script>
+
+<!-- nepal data  -->
+<script src="./data/js/headquaters.js"></script>
+<script src="./data/js/nepal-district.js"></script>
+
+<!-- marker cluseter  -->
+<script src="./Leaflet.markercluster-1.4.1/dist/leaflet.markercluster-src.js"></script>
+
+<!-- browser print leaflet  -->
+<script src="./L.leaflet.browser.print.min.js"></script>
+
+
+<!-- leaflet measure  -->
+<script src='./leaflet-measure.js'></script>
+
+<script>
+    var map = L.map('mapid', { zoomControl: false, measureControl: true }).setView([28.3949, 84.1240], 7);
+    new L.Control.Zoom({ position: 'topright' }).addTo(map)
+
+    // var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //     maxZoom: 19,
+    //     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    // }).addTo(map);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // L.marker([28.3949, 84.1240]).addTo(map).bindPopup('This is popup').openPopup()
+
+    var demoData = L.geoJSON(dataVar, {
+        onEachFeature: function (feature, layer) {
+            layer.bindPopup(feature.properties.name)
+        },
+        style: {
+            color: 'green',
+            fillOpacity: 0.5,
+            fillColor: 'red'
+        }
+    })
+
+    var hq = L.geoJSON(headquaters, {
+        style: {
+            color: 'green',
+            fillOpacity: 0.5,
+            fillColor: 'red'
+        },
+        onEachFeature: function (feature, layer) {
+            layer.bindPopup(feature.properties.HQ_NAME)
+        },
+    })
+
+    // hq.addTo(map)
+
+    var markers = L.markerClusterGroup();
+    hq.addTo(markers)
+    // ... Add more layers ...
+    // map.addLayer(markers);
+
+    markers.addTo(map)
+
+    var mapId = document.getElementById('mapid');
+    // $('#mapid')
+    function openFullMap() {
+        mapid.requestFullscreen();
+    }
+
+    $('.print-map').click(function () {
+        window.print();
+    })
+
+    L.control.browserPrint().addTo(map);
+
+    map.on('mousemove', function (e) {
+        console.log(e)
+        $('.coordinate').html("lat: " + e.latlng.lat + " long: " + e.latlng.lng)
+    })
+
+
+</script>
