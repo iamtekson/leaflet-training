@@ -1,5 +1,9 @@
 # Tutorial topics
 
+Please checkout the video playlist on youtube here:
+
+1. [Web-GIS and Web-Mapping with leaflet and geoDjango|| 1st Day || tekson](https://youtu.be/XdOjwanUJlU)
+
 ![leaflet training](./img/webgis_training.jpg)
 
 ### Leaflet
